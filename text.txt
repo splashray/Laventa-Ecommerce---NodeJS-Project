@@ -1,0 +1,58 @@
+Timestamps
+
+
+00:00:00     1 - Introduction
+00:07:23     2 - Create Folder Structure
+00:13:34     3 - Design Website Template
+00:25:26     4 - Create Home Screen
+00:37:48     5 - Render Dynamic Products
+00:52:22     6 - Build Url Router
+01:03:32     7 - Create NodeJS Server
+01:11:07     8 - Load Products From Backend
+01:35:18     9 - Add Web Pack To Frontend
+01:28:59     10 - Install Babel On Backend
+01:36:03     11 - Enable Coding Linting with ESLint.
+01:44:21     12 - Install VS Code Extension
+01:50:13     13 - Create Rating Component.
+02:01:31     14 - Product Screen
+02:15:28     15 - Product Screen UI
+02:29:06     16 - Product Screen Action
+02:34:30     17 - Add To Cart Action
+02:49:20     18 - Cart Screen UI
+03:07:48      19 - Update and Delete Cart Items
+03:21:43      20 - Connect to MongoDB and Create Admin User
+03:40:22      21 - Sign in Screen UI
+03:50:15      22 - Sign in Screen Backend
+04:05:55      23 - Sign in Screen Action
+04:20:26      24 - Progress Indicator
+04:32:09      25 - Register Screen
+04:42:16      26 - Profile Screen
+05:04:16      27 - Checkout Wizard Screen
+05:28:19      28 - Place Order Screen
+05:48:35      29 - Place Order Action
+06:09:51      30 - Order Details Screen
+
+
+06:22:19      31 - Payment by PayPal
+06:47:40      32 - Display Orders History
+07:00:42      33 - Create Admin Dashboard
+07:15:54      34 - Admin Products UI
+07:26:02      35 - Create Product API
+07:40:47      36 - Edit Product Screen UI
+07:53:02      37 - Edit Product Backend
+08:04:04      38 - Upload Product Image
+08:19:08      39 - Add Build Scripts
+08:30:57      40 - Delete Product
+08:39:49      41 - List Orders
+08:52:09      42 - Delete Orders
+09:02:23      43 - Dashboard Summary
+09:17:32      44 - Dashboard Chart
+09:30:25      45 - Deploy Website on Heroku
+09:51:29      46 - Fix Build Script and Add Guide For Run Locally
+09:54:21      47 - Search Products
+10:04:26      48 - Show Sidebar Menu
+10:10:57      49 - Rate and Review Products
+
+
+${JSON.parse(localStorage.getItem('cartItems')).length}
+               <!-- ${JSON.parse(localStorage.getItem('cartItems')).length} --> 
