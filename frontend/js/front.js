@@ -1,12 +1,12 @@
-'use strict';
 
-document.addEventListener('DOMContentLoaded', function () {
+
+document.addEventListener('DOMContentLoaded', () => {
 	/* ===============================================================
 		CUSTOM SELECT [CHOICES.JS]
 	=============================================================== */
 	function injectClassess(x) {
-		let pickerCustomClass = x.dataset.customclass;
-		let pickerSevClasses = pickerCustomClass.split(' ');
+		const pickerCustomClass = x.dataset.customclass;
+		const pickerSevClasses = pickerCustomClass.split(' ');
 		x.parentElement.classList.add.apply(x.parentElement.classList, pickerSevClasses);
 	}
 
@@ -25,34 +25,34 @@ document.addEventListener('DOMContentLoaded', function () {
 	/* ===============================================================
     	 COUNTRY SELECT BOX FILLING
   	=============================================================== */
-	const request = new XMLHttpRequest();
-	request.open('GET', 'js/countries.json');
-	request.onload = function () {
-		if (request.status >= 200 && request.status < 400) {
-			const response = JSON.parse(request.responseText);
+	// const request = new XMLHttpRequest();
+	// request.open('GET', 'js/countries.json');
+	// request.onload = function () {
+	// 	if (request.status >= 200 && request.status < 400) {
+	// 		const response = JSON.parse(request.responseText);
 
-			var selectOption = '';
-			response.forEach((country) => {
-				selectOption += "<option value='" + country.name + "' data-dial-code='" + country.dial_code + "'>" + country.name + '</option>';
-			});
-			document.querySelectorAll('select.country').forEach((el) => {
-				el.insertAdjacentHTML('beforeend', selectOption);
-			});
+	// 		var selectOption = '';
+	// 		response.forEach((country) => {
+	// 			selectOption += "<option value='" + country.name + "' data-dial-code='" + country.dial_code + "'>" + country.name + '</option>';
+	// 		});
+	// 		document.querySelectorAll('select.country').forEach((el) => {
+	// 			el.insertAdjacentHTML('beforeend', selectOption);
+	// 		});
 
-			const countryChoices = document.querySelectorAll('.country');
-			if (countryChoices.length) {
-				countryChoices.forEach((el) => {
-					const choices = new Choices(el, {
-						placeholder: true,
-						searchEnabled: false,
-						itemSelectText: '',
-						callbackOnInit: () => injectClassess(el),
-					});
-				});
-			}
-		}
-	};
-	request.send();
+	// 		const countryChoices = document.querySelectorAll('.country');
+	// 		if (countryChoices.length) {
+	// 			countryChoices.forEach((el) => {
+	// 				const choices = new Choices(el, {
+	// 					placeholder: true,
+	// 					searchEnabled: false,
+	// 					itemSelectText: '',
+	// 					callbackOnInit: () => injectClassess(el),
+	// 				});
+	// 			});
+	// 		}
+	// 	}
+	// };
+	// request.send();
 
 	/* ===============================================================
 		GLIGHTBOX
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	/* ===============================================================
 		PRODUCT DETAIL SLIDER
 	=============================================================== */
-	var productSliderThumbs = new Swiper('.product-slider-thumbs', {
+	const productSliderThumbs = new Swiper('.product-slider-thumbs', {
 		direction: 'horizontal',
 		slidesPerView: 5,
 		spaceBetween: 10,
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 	});
 
-	var productsSlider = new Swiper('.product-slider', {
+	const productsSlider = new Swiper('.product-slider', {
 		slidesPerView: 1,
 		spaceBetween: 0,
 		thumbs: {
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		DISABLE UNWORKED ANCHORS
 	=============================================================== */
 	document.querySelectorAll('a[href="#').forEach((el) => {
-		el.addEventListener('click', function (e) {
+		el.addEventListener('click', (e) => {
 			e.preventDefault();
 		});
 	});
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
       =============================================================== */
 	document.querySelectorAll('.dec-btn').forEach((el) => {
 		el.addEventListener('click', () => {
-			var siblings = el.parentElement.querySelector('input');
+			const siblings = el.parentElement.querySelector('input');
 			if (parseInt(siblings.value, 10) >= 1) {
 				siblings.value = parseInt(siblings.value, 10) - 1;
 			}
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	document.querySelectorAll('.inc-btn').forEach((el) => {
 		el.addEventListener('click', () => {
-			var siblings = el.parentElement.querySelector('input');
+			const siblings = el.parentElement.querySelector('input');
 			siblings.value = parseInt(siblings.value, 10) + 1;
 		});
 	});

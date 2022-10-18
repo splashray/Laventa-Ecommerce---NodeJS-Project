@@ -17,12 +17,18 @@ import PaymentScreen from './screens/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import OrderDetailsScreen from './screens/OrderDetailsScreen';
+import DashboardScreen from './screens/DashboardScreen';
+import OrderListScreen from './screens/OrderListScreen';
+import ProductListScreen from './screens/ProductListScreen';
+import ProductEditScreen from './screens/ProductEditScreen';
+import UserListScreen from './screens/UserListScreen';
 
 const routes = {
   '/': HomeScreen,
   '/shop': ShopScreen, 
   '/wishlist': WishListScreen,
   '/cart': CartScreen,
+  '/product/:id/edit': ProductEditScreen,
   '/product/:id': ProductScreen,
   '/cart/:id': CartScreen,
   '/shipping': ShippingScreen,
@@ -33,9 +39,13 @@ const routes = {
   '/address-book': AddressBook,
   '/close-account': CloseAccount,
   '/order-details': OrderDetailsScreen,
- 
   '/payment': PaymentScreen,
   '/placeorder': PlaceOrderScreen,
+  '/dashboard': DashboardScreen,
+  '/orders-lists': OrderListScreen,
+  '/products-lists': ProductListScreen,
+  '/users-lists': UserListScreen,
+
 
 
 

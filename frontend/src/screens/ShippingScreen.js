@@ -4,19 +4,6 @@ import { hideLoading, redirectUser, showLoading, showMessage } from "../utils";
 
 const ShippingScreen ={
     after_render: () => {
-        // document
-        //   .getElementById('shipping-form')
-        //   .addEventListener('submit', async (e) => {     
-        //   e.preventDefault()
-        //   setShipping({
-        //     address: document.getElementById('address').value,
-        //     city: document.getElementById('city').value,
-        //     postalCode: document.getElementById('postalCode').value,
-        //     country: document.getElementById('country').value,
-        //   })
-        //   document.location.hash = '/payment'
-        //   });
-
         document
         .getElementById('signout-button')
         .addEventListener("click",()=>{
@@ -53,7 +40,7 @@ const ShippingScreen ={
 
       },
     render: async()=>{
-      const {name, email} = getUserInfo()
+      const {name, firstName, lastName, email, phone,deliveryAddress, additional, town, state, company, country } = getUserInfo()
       if (!name) {
         document.location.hash ='/'
       }   
@@ -100,11 +87,11 @@ const ShippingScreen ={
          
         <div class="col-lg-6">
         <label class="form-label text-sm text-uppercase" for="firstName">First name </label>
-        <input  class="form-control form-control-lg" type="text" id="firstName" placeholder="Enter your first name" required>
+        <input value="${firstName}"  class="form-control form-control-lg" type="text" id="firstName" placeholder="Enter your first name" required>
         </div>
         <div class="col-lg-6">
             <label class="form-label text-sm text-uppercase" for="lastName">Last name </label>
-            <input class="form-control form-control-lg" type="text" id="lastName" placeholder="Enter your last name" required>
+            <input value="${lastName}" class="form-control form-control-lg" type="text" id="lastName" placeholder="Enter your last name" required>
         </div>
         <div class="col-lg-6">
             <label class="form-label text-sm text-uppercase" for="email">Email address </label>
@@ -112,28 +99,28 @@ const ShippingScreen ={
         </div>
         <div class="col-lg-6">
             <label class="form-label text-sm text-uppercase" for="phone">Phone number </label>
-            <input class="form-control form-control-lg" type="tel" id="phone" placeholder="e.g. +234 9053215745" required>
+            <input value="${phone}" class="form-control form-control-lg" type="tel" id="phone" placeholder="e.g. +234 9053215745" required>
         </div>
 
           <div class="col-lg-12">
             <label class="form-label text-sm text-uppercase" for="address">Delivery Address  </label>
-            <input class="form-control form-control-lg" type="text" id="address" placeholder="Enter your Address" required>
+            <input value="${deliveryAddress}" class="form-control form-control-lg" type="text" id="address" placeholder="Enter your Address" required>
           </div>
           <div class="col-lg-12">
             <label class="form-label text-sm text-uppercase" for="addressalt">Additional Information </label>
-            <input class="form-control form-control-lg" type="text" id="additional" placeholder="Enter Additional Information (optional)" >
+            <input value="${additional}" class="form-control form-control-lg" type="text" id="additional" placeholder="Enter Additional Information (optional)" >
           </div>
           <div class="col-lg-6">
           <label class="form-label text-sm text-uppercase" for="company">Company name (optional) </label>
-          <input class="form-control form-control-lg" type="text" id="company" placeholder="Your company name">
+          <input value="${company}" class="form-control form-control-lg" type="text" id="company" placeholder="Your company name">
         </div>
           <div class="col-lg-6">
             <label class="form-label text-sm text-uppercase" for="city">Town/City </label>
-            <input class="form-control form-control-lg" type="text" id="town" required>
+            <input value="${town}" class="form-control form-control-lg" type="text" id="town" required>
           </div>
           <div class="col-lg-6">
             <label class="form-label text-sm text-uppercase" for="state">State </label>
-            <input class="form-control form-control-lg" type="text" id="state" required>
+            <input value="${state}" class="form-control form-control-lg" type="text" id="state" required>
           </div>
         <div class="col-lg-6 form-group">
           <label class="form-label text-sm text-uppercase" for="country">Country</label>

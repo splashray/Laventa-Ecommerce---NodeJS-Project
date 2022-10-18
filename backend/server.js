@@ -3,10 +3,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import data from './data';
+import path from 'path'
 import  config  from './config';
 import UserRouter from './routers/userRouter';
 import orderRouter from './routers/orderRouter';
+import productRouter from './routers/productRouter';
+import uploadRouter from './routers/uploadRouter';
 
 
 mongoose.connect(config.MONGODB_URL, {
@@ -21,26 +23,21 @@ mongoose.connect(config.MONGODB_URL, {
 const app = express();
 app.use(cors());
 app.use(bodyParser.json())
+app.use('/api/uploads', uploadRouter);
 app.use('/api/users', UserRouter);
 app.use('/api/orders', orderRouter)
-
-app.get('/api/products', (req, res) => {
-  res.send(data.products);
-});
+app.use('/api/products', productRouter)
 app.get('/api/paystack/clientId',(req,res)=>{
   res.send({clientId: config.PAYSTACK_CLIENT_ID})
 })
 app.get('/api/paypal/clientId',(req,res)=>{
   res.send({clientId: config.PAYPAL_CLIENT_ID})
 })
-app.get('/api/products/:id', (req, res) => {
-  const product = data.products.find(x=>x._id === req.params.id)
-    if(product){
-    res.send(product);
-    }else{
-      res.status(404).send({message: 'Product Not Found'})
-    }
-});
+app.use('/uploads', express.static(path.join(__dirname, '/../uploads')))
+app.use(express.static(path.join(__dirname, '/../frontend')))
+app.use('*',(req,res)=>{
+  res.sendFile(path.join(__dirname, '/../frontend/index.html'))
+})
 
 app.use((err, req, res, next)=>{
   const status = err.name && err.name === 'ValidationError'? 400:500;

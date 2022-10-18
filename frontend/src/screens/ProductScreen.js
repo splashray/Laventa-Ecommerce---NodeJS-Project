@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { getProduct } from '../api';
-import {hideLoading, parseRequestUrl, showLoading } from '../utils'
+import { createReview, getProduct, getProductHome } from '../api';
+import {hideLoading, parseRequestUrl, rerender, showErrMessage, showGoodMessage, showLoading } from '../utils'
 import Rating from '../components/Rating';
+import { getUserInfo } from '../localStorage';
 
 const ProductScreen = {
   after_render: ()=>{
@@ -12,50 +13,35 @@ const ProductScreen = {
     })
 
 
+    if (document.getElementById('review-form')) {
+      document
+        .getElementById('review-form')
+        .addEventListener('submit', async (e) => {
+          e.preventDefault();
+          showLoading();
+          const data = await createReview(request.id, {
+            comment: document.getElementById('comment').value,
+            rating: document.getElementById('rating').value,
+          });
+          hideLoading();
+          if (data.error) {
+            showErrMessage(data.error);
+          } else {
+            showGoodMessage('Review Added Successfully', () => {
+              rerender(ProductScreen);
+            });
+          }
+        });
+    }
 
 },
 
     render: async ()=> {
+    const products = await getProductHome();
     const request = parseRequestUrl();
     const product = await getProduct(request.id)
-      if(product.error){
+    const userInfo = getUserInfo()
             return `
-                <section class="py-5 bg-light">
-                <div class="container">
-                  <div class="row  gy-3">
-                          <h1 style="color:red;font-size:46px;"> ${product.error}</h1> 
-                          <h4 text-align="center" > We have alot for you, <br> Check out other Related Products </h4>
-                  </div>
-                </div>
-              </section>
-
-                    <!-- RELATED PRODUCTS-->
-            
-            <h2  class="h5 text-uppercase mb-4 text-center" >Related products</h2>
-            <div class="row">
-                <!-- PRODUCT-->
-                <div class="col-lg-3 col-sm-6">
-                <div class="product text-center skel-loader">
-                    <div class="d-block mb-3 position-relative"><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-1.jpg" alt="..."></a>
-                    <div class="product-overlay">
-                        <ul class="mb-0 list-inline">
-                        <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#!"><i class="far fa-heart"></i></a></li>
-                        <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-dark" href="#!">Add to cart</a></li>
-                        <li class="list-inline-item mr-0"><a class="btn btn-sm btn-outline-dark" href="#productView" data-bs-toggle="modal"><i class="fas fa-expand"></i></a></li>
-                        </ul>
-                    </div>
-                    </div>
-                    <h6> <a class="reset-anchor" href="detail.html">Kui Ye Chen’s AirPods</a></h6>
-                    <p class="small text-muted">$250</p>
-                </div>
-                </div>
-            
-            </div>
-            </div>
-        </section>
-    `
-  }
-        return `
     <section class="py-5">
     <div class="container">
       <div class="row mb-5">
@@ -94,7 +80,6 @@ const ProductScreen = {
 
           <h1>${product.name} </h1>
           <p class="text-muted lead">$ ${product.price}</p>
-          <p class="text-sm mb-4">${product.desc}</p>
           <div class="row align-items-stretch mb-4">
            
             <div class="col-sm-3 pl-sm-0">
@@ -138,38 +123,68 @@ const ProductScreen = {
         <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
           <div class="p-4 p-lg-5 bg-white">
             <div class="row">
+
               <!-- Reviews -->
               <div class="col-lg-8">
+              ${product.reviews.length === 0 ? `<div>There is no review.</div>` : ''}  
+              ${product.reviews
+                .map(
+                  (review) =>
+                    `
                 <div class="d-flex mb-3">
-                  <div class="flex-shrink-0"><img class="rounded-circle" src="img/customer-1.png" alt="" width="50"/></div>
+                  <div class="flex-shrink-0"><img class="rounded-circle" src="img/avatar.png" alt="" width="50"/></div>
                   <div class="ms-3 flex-shrink-1">
-                    <h6 class="mb-0 text-uppercase">Jason Doe</h6>
-                    <p class="small text-muted mb-0 text-uppercase">20 May 2020</p>
+                    <h6 class="mb-0 text-uppercase">${review.name}</h6>
+                    <p class="small text-muted mb-0 text-uppercase"> ${review.createdAt.substring(0, 10)}</p>
                     <ul class="list-inline mb-1 text-xs">
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star-half-alt text-warning"></i></li>
+                    ${Rating.render({
+                      value: review.rating,
+                    })}
                     </ul>
-                    <p class="text-sm mb-0 text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p class="text-sm mb-0 text-muted"> ${review.comment}.</p>
                   </div>
-                </div>
-                <div class="d-flex">
-                  <div class="flex-shrink-0"><img class="rounded-circle" src="img/customer-2.png" alt="" width="50"/></div>
-                  <div class="ms-3 flex-shrink-1">
-                    <h6 class="mb-0 text-uppercase">Jane Doe</h6>
-                    <p class="small text-muted mb-0 text-uppercase">20 May 2020</p>
-                    <ul class="list-inline mb-1 text-xs">
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star text-warning"></i></li>
-                      <li class="list-inline-item m-0"><i class="fas fa-star-half-alt text-warning"></i></li>
-                    </ul>
-                    <p class="text-sm mb-0 text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>`
+                )
+                .join('\n')}
+
+
+            <!-- review details--> <br> <br> <br>
+            ${
+              userInfo.name
+                ? `
+            <div class="row">
+              <div class="col-lg-8">
+                <form id="review-form">
+                  <div class="row gy-3">
+                    <div class="col-lg-12">
+                    <label class="form-label text-sm text-uppercase" for="rating">Choose Rating</label>
+                      <select  class="form-control form-control-lg" required name="rating" id="rating">
+                          <option value="">Select</option>
+                          <option value="1">1 = Poor</option>
+                          <option value="2">2 = Fair</option>
+                          <option value="3">3 = Good</option>
+                          <option value="4">4 = Very Good</option>
+                          <option value="5">5 = Excellent</option>
+                      </select>
+                      </div>
+                    <div class="col-lg-12">
+                        <label class="form-label text-sm text-uppercase" for="comment">Write Review</label>
+                        <textarea class="form-control form-control-lg" type="text" id="comment" required></textarea>
+                    </div>
+                    <div class="col-lg-12 form-group">
+                      <button class="btn btn-dark" type="submit"> Save Review</button>
+                    </div>
                   </div>
-                </div>
+                </form>
+             ` : ` <div> Please <a href="/#/signin">Signin</a> to write a review.</div>`
+              }
+
+              </div>
+            </div>
+  
+
+
+
               </div>
             </div>
           </div>
@@ -179,23 +194,37 @@ const ProductScreen = {
       <h2 class="h5 text-uppercase mb-4">Related products</h2>
       <div class="row">
         <!-- PRODUCT-->
-        <div class="col-lg-3 col-sm-6">
-          <div class="product text-center skel-loader">
-            <div class="d-block mb-3 position-relative"><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-1.jpg" alt="..."></a>
+        ${products.map(
+          (productr) => `
+        <!-- PRODUCT-->
+        <div class="col-xl-3 col-lg-4 col-sm-6">
+          <div class="product text-center">
+            <div class="position-relative mb-3">
+
+            ${productr.tags === "Sale"?
+              `<div class="badge text-white bg-primary">Sale</div>`
+              : productr.tags === "Sold" ?`<div class="badge text-white bg-danger">Sold</div>`
+              : productr.tags === "New" ? `<div class="badge text-white bg-info">New</div>`
+              :`<div class="badge text-white bg-"></div>`}
+
+              <a class="d-block" href="/#/product/${productr._id}"><img class="img-fluid w-100" src="${productr.image}" alt="{productr.name}"></a>
               <div class="product-overlay">
                 <ul class="mb-0 list-inline">
-                  <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#!"><i class="far fa-heart"></i></a></li>
-                  <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-dark" href="#!">Add to cart</a></li>
-                  <li class="list-inline-item mr-0"><a class="btn btn-sm btn-outline-dark" href="#productView" data-bs-toggle="modal"><i class="fas fa-expand"></i></a></li>
+                  <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="/wishlist"><i class="far fa-heart"></i></a></li>
+                  <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-dark" href="/#/product/${productr._id}">Add to cart</a></li>
+                  <li class="list-inline-item me-0"><a class="btn btn-sm btn-outline-dark" href="#productView" data-bs-toggle="modal"><i class="fas fa-expand"></i></a></li>
                 </ul>
               </div>
             </div>
-            <h6> <a class="reset-anchor" href="detail.html">Kui Ye Chen’s AirPods</a></h6>
-            <p class="small text-muted">$250</p>
+            <h6> <a class="reset-anchor" href="/#/product/${productr._id}">${productr.name}</a></h6>
+            <p class="small text-muted">$${productr.price}</p>
           </div>
         </div>
-       
-      </div>
+        `,
+        )
+      .join('\n')}
+
+
     </div>
   </section>
       `

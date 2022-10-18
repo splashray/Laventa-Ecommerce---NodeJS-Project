@@ -39,7 +39,7 @@ const CloseAccount = {
       </div>
     </button>
         <div class="col-lg-12 form-group">
-          <button class="btn btn-danger" type="submit">Close My Account</button>
+          <button class="btn btn-danger" type="submit"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Close My Account</button>
         </div>
       </div>
     </form>

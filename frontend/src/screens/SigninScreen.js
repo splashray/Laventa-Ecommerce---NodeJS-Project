@@ -79,7 +79,7 @@ const SigninScreen ={
                     </div>
                     <div class="text-center">
                   
-                      <button type="submit" class="btn btn-lg btn-primary hover-black">Sign In</button>
+                      <button type="submit" class="btn btn-lg btn-primary hover-black">Sign In <i class="fa fa-sign-in" aria-hidden="true"></i></button>
                     </div> <br> <br>
                     <div class="text-center muted  mb-4" style="color:white;">
                     <small><a style="color:dark;" href="/#/forget-password"> Forgot password? </a></small> ||

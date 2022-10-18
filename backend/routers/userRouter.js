@@ -2,7 +2,7 @@ import express from 'express'
 import bcrypt from 'bcryptjs'
 import expressAsyncHandler from 'express-async-handler'
 import User from '../models/userModel'
-import { generateToken, isAuth } from '../utils'
+import { generateToken, isAdmin, isAuth } from '../utils'
 // import { generateToken, isAuth } from '../utils'
 
 const UserRouter = express.Router()
@@ -97,6 +97,49 @@ UserRouter.put('/:id', isAuth, expressAsyncHandler( async(req,res)=>{
     }
 }))
 
+
+UserRouter.put('/pass/:id', isAuth, expressAsyncHandler( async(req,res)=>{  
+    const salt = bcrypt.genSaltSync(10)
+    const hash = bcrypt.hashSync(req.body.npassword, salt)
+
+    const user = await User.findById(req.params.id)
+    if(!user){ 
+        res.status(401).send({ message: 'User Not Found',})
+    }else{
+        const  isPasswordCorrect = await bcrypt.compare(req.body.opassword, user.password)
+        if(!isPasswordCorrect){
+             res.status(400).send({ message: 'Old Password is wrong!'})
+        }else{
+         user.password =  hash || user.password 
+        const updatedUser = await user.save()
+            res.send({
+                _id: updatedUser._id,
+                token: generateToken(updatedUser),
+            
+            })
+        }
+    }
+}))
+
+UserRouter.get('/:id', isAuth, expressAsyncHandler( async(req,res)=>{  
+    const user = await User.findById(req.params.id);
+    if(user){
+     res.send(user);
+    }else{
+     res.status(404).send({message: 'User Not Found'})
+    }
+
+}))
+
+UserRouter.get('/', isAuth, isAdmin, expressAsyncHandler( async(req,res)=>{  
+    const user = await User.find({})
+    if(user){
+     res.send(user);
+    }else{
+     res.status(404).send({message: 'Users are Not Found'})
+    }
+    
+}))
 
 
 export default UserRouter;

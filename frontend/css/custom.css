@@ -221,3 +221,14 @@
 .errored {
   color: #c04040;
 }
+
+/*======================
+ chartist style
+=======================*/
+.charts {
+  display: flex;
+  justify-content: space-between;
+}
+.charts > div {
+  flex: 1;
+}

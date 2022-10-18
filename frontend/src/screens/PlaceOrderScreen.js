@@ -6,7 +6,7 @@ import { hideLoading, showLoading, showMessage } from "../utils";
 const convertCartToOrder = () => {
   const orderItems = getcartItems();
   if (orderItems.length === 0) {
-    document.location.hash = '/cart';
+    document.location.hash = '/order-details';
   }
   const userInfo = getUserInfo ()
     if((!userInfo.name) && (!userInfo.deliveryAddress)){

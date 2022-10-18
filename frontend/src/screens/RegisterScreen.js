@@ -101,7 +101,7 @@ const RegisterScreen ={
                     </div>
                     <div class="text-center">
                   
-                      <button type="submit" class="btn btn-lg btn-primary hover-black">Sign Up</button>
+                      <button type="submit" class="btn btn-lg btn-primary hover-black">Sign Up <i class="fa fa-sign-in" aria-hidden="true"></i></button>
                     </div> <br> <br> <br>
                     <div class="text-center muted  mb-4" style="color:white;">
                     <small><a style="color:white;" href="/#/signin"> Already have an Account? </a></small>

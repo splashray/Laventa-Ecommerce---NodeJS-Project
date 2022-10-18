@@ -1,4 +1,6 @@
-import { clearUser } from "../localStorage";
+import { update, updatepass } from "../api";
+import { clearUser, getUserInfo, setUserInfo } from "../localStorage";
+import { hideLoading, showErrMessage, showGoodMessage, showLoading, showMessage } from "../utils";
 
 const AccountManage = {
     after_render: async ()=>{
@@ -8,8 +10,57 @@ const AccountManage = {
           clearUser()
           document.location.hash ='/'
       })
+
+      document.getElementById('change-details')
+      .addEventListener("submit",async(e)=>{
+        e.preventDefault()
+        showLoading();
+        const data = await update({
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          phone: document.getElementById('phone').value,
+        });
+        hideLoading();
+        if (data.error) {
+          showMessage(data.error);
+        } else {
+          setUserInfo(data);
+          // redirectUser();
+          
+          document.location.hash ='/account-management'
+        }
+
+      })
+
+      document.getElementById('change-password')
+      .addEventListener("submit",async(e)=>{
+        e.preventDefault()
+        const opass = document.getElementById('opassword').value
+        const npass = document.getElementById('npassword').value
+        const cnpass = document.getElementById('cnpassword').value
+        if(npass !== cnpass){
+          showErrMessage("New Password doesn't match")
+          document.location.hash ='/account-management'
+        }else{
+          showLoading();
+          const data = await updatepass({
+            opassword: opass,
+            npassword: npass,
+          });
+          hideLoading();
+          if (data.error) {
+            showErrMessage(data.error);
+          } else {
+            showGoodMessage("password Changed")
+            document.location.hash ='/account-management'
+          }
+        }
+
+      })
     },
     render: async () => {
+      const {firstName,lastName, email, phone } = getUserInfo()
+      
         return `
                 <div class="container">
             <!-- HERO SECTION-->
@@ -30,7 +81,7 @@ const AccountManage = {
                   
                   <div class="row gy-3">
                     <div class="col-lg-12 form-group">
-                      <button id="signout-button" class="btn btn-danger" type="submit">Logout </button>
+               <button id="signout-button" class="btn btn-danger" type="submit">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></button>
                     </div>
                   </div>
 
@@ -47,19 +98,19 @@ const AccountManage = {
                 <div class="row gy-3">
                   <div class="col-lg-6">
                     <label class="form-label text-sm text-uppercase" for="firstName">First name </label>
-                    <input class="form-control form-control-lg" type="text" id="firstName" placeholder="Enter your first name">
+                    <input value="${firstName}" class="form-control form-control-lg" type="text" id="firstName" placeholder="Enter your first name" >
                   </div>
                   <div class="col-lg-6">
                     <label class="form-label text-sm text-uppercase" for="lastName">Last name </label>
-                    <input class="form-control form-control-lg" type="text" id="lastName" placeholder="Enter your last name">
+                    <input value="${lastName}" class="form-control form-control-lg" type="text" id="lastName" placeholder="Enter your last name">
                   </div>
                   <div class="col-lg-6">
                     <label class="form-label text-sm text-uppercase" for="email">Email address </label>
-                    <input class="form-control form-control-lg" type="email" id="email" placeholder="e.g. Jason@example.com" readonly>
+                    <input value="${email}" class="form-control form-control-lg" type="email" id="email" placeholder="e.g. Jason@example.com" readonly>
                   </div>
                   <div class="col-lg-6">
                     <label class="form-label text-sm text-uppercase" for="phone">Phone number </label>
-                    <input class="form-control form-control-lg" type="tel" id="phone" placeholder="e.g. +02 245354745">
+                    <input value="${phone}" class="form-control form-control-lg" type="tel" id="phone" placeholder="e.g. +02 245354745">
                   </div>
                   <div class="col-lg-12 form-group">
                     <button class="btn btn-dark" type="submit">Update Details</button>

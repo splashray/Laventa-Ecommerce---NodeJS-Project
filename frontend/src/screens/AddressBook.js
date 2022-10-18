@@ -1,5 +1,34 @@
+import { update } from "../api";
+import { getUserInfo, setUserInfo } from "../localStorage";
+import { hideLoading, showLoading, showMessage } from "../utils";
+
 const AddressBook = {
+  after_render: async ()=>{
+    document
+    .getElementById('address-form')
+    .addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showLoading();
+      const data = await update({
+        deliveryAddress: document.getElementById('address').value,   
+        additional: document.getElementById('additional').value,
+        town: document.getElementById('town').value,  
+        state: document.getElementById('state').value,
+        company: document.getElementById('company').value,   
+        country: document.getElementById('country').value,
+      });
+      hideLoading();
+      if (data.error) {
+        showMessage(data.error);
+      } else {
+        setUserInfo(data);
+        // redirectUser();
+        document.location.hash ='/address-book'
+      }
+    });
+  },
   render: async () => {
+    const {deliveryAddress, additional, town, state, company, country } = getUserInfo()
     return `
             <div class="container">
         <!-- HERO SECTION-->
@@ -16,14 +45,6 @@ const AddressBook = {
                   <li class="breadcrumb-item active" aria-current="page">Address Book</li>
                 </ol>
               </nav>
-
-              <div class="row gy-3">
-              <div class="col-lg-12 form-group">
-                <button id="logout-button" class="btn btn-danger" type="submit">Logout </button>
-              </div>
-            </div>
-
-
             </div>
           </div>
         </div>
@@ -33,96 +54,48 @@ const AddressBook = {
       <h2 class="h5 text-uppercase mb-4">Billing details</h2>
       <div class="row">
         <div class="col-lg-8">
-          <form action="#">
+          <form id="address-form">
             <div class="row gy-3">
              
               <div class="col-lg-12">
                 <label class="form-label text-sm text-uppercase" for="address">Delivery Address  </label>
-                <input class="form-control form-control-lg" type="text" id="address" placeholder="Enter your Address">
+                <input value="${deliveryAddress}" class="form-control form-control-lg" type="text" id="address" placeholder="Enter your Address">
               </div>
               <div class="col-lg-12">
                 <label class="form-label text-sm text-uppercase" for="addressalt">Additional Information </label>
-                <input class="form-control form-control-lg" type="text" id="addressalt" placeholder="Enter Additional Information (optional)">
+                <input value="${additional}" class="form-control form-control-lg" type="text" id="additional" placeholder="Enter Additional Information (optional)">
               </div>
               
               <div class="col-lg-6">
                 <label class="form-label text-sm text-uppercase" for="city">Town/City </label>
-                <input class="form-control form-control-lg" type="text" id="city">
+                <input value="${town}" class="form-control form-control-lg" type="text" id="town">
               </div>
               <div class="col-lg-6">
                 <label class="form-label text-sm text-uppercase" for="state">State </label>
-                <input class="form-control form-control-lg" type="text" id="state">
+                <input value="${state}" class="form-control form-control-lg" type="text" id="state">
               </div>
 
               <div class="col-lg-6">
               <label class="form-label text-sm text-uppercase" for="company">Company name (optional) </label>
-              <input class="form-control form-control-lg" type="text" id="company" placeholder="Your company name">
+              <input value="${company}" class="form-control form-control-lg" type="text" id="company" placeholder="Your company name">
             </div>
             <div class="col-lg-6 form-group">
-              <label class="form-label text-sm text-uppercase" for="country">Country</label>
-              <select class="country" id="country" data-customclass="form-control form-control-lg rounded-0">
-                <option value>Choose your country</option>
+            <label class="form-label text-sm text-uppercase" for="country">Country</label>
+            <select  class="form-control form-control-lg rounded-0" id="country" required>
+              <option value="">Choose your country</option>
+              <option value="Nigeria">Nigeria</option>
+              <option value="Niger">Niger</option>
+              <option value="Ghana">Ghana</option>
+              <option value="Nigeria">Nigeria</option>
+              <option value="South-Africa">South Africa</option>
+              <option value="Togo">Togo</option>
+              <option value="Tunisia">Tunisia</option>
+              <option value="Uganda">Uganda</option>
+              <option value="United States">United States</option>
+            </select>
+          </div>
 
-              </select>
-            </div>
-
-              <div class="col-lg-6">
-                <button class="btn btn-link text-dark p-0 shadow-0" type="button" data-bs-toggle="collapse" data-bs-target="#alternateAddress">
-                  <div class="form-check">
-                    <input class="form-check-input" id="alternateAddressCheckbox" type="checkbox">
-                    <label class="form-check-label" for="alternateAddressCheckbox">Alternate billing address</label>
-                  </div>
-                </button>
-              </div>
-              <div class="collapse" id="alternateAddress">
-                <div class="row gy-3">
-                  <div class="col-12 mt-4">
-                    <h2 class="h4 text-uppercase mb-4">Alternative billing details</h2>
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="firstName2">First name </label>
-                    <input class="form-control form-control-lg" type="text" id="firstName2" placeholder="Enter your first name">
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="lastName2">Last name </label>
-                    <input class="form-control form-control-lg" type="text" id="lastName2" placeholder="Enter your last name">
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="email2">Email address </label>
-                    <input class="form-control form-control-lg" type="email" id="email2" placeholder="e.g. Jason@example.com">
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="phone2">Phone number </label>
-                    <input class="form-control form-control-lg" type="tel" id="phone2" placeholder="e.g. +02 245354745">
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="company2">Company name (optional) </label>
-                    <input class="form-control form-control-lg" type="text" id="company2" placeholder="Your company name">
-                  </div>
-                  <div class="col-lg-6 form-group">
-                    <label class="form-label text-sm text-uppercase" for="countryAlt">Country</label>
-                    <select class="country" id="countryAlt" data-customclass="form-control form-control-lg rounded-0">
-                      <option value>Choose your country</option>
-                    </select>
-                  </div>
-                  <div class="col-lg-12">
-                    <label class="form-label text-sm text-uppercase" for="address2">Address line 1 </label>
-                    <input class="form-control form-control-lg" type="text" id="address2" placeholder="House number and street name">
-                  </div>
-                  <div class="col-lg-12">
-                    <label class="form-label text-sm text-uppercase" for="addressalt2">Address line 2 </label>
-                    <input class="form-control form-control-lg" type="text" id="addressalt2" placeholder="Apartment, Suite, Unit, etc (optional)">
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="city2">Town/City </label>
-                    <input class="form-control form-control-lg" type="text" id="city2">
-                  </div>
-                  <div class="col-lg-6">
-                    <label class="form-label text-sm text-uppercase" for="state2">State/County </label>
-                    <input class="form-control form-control-lg" type="text" id="state2">
-                  </div>
-                </div>
-              </div>
+              
               <div class="col-lg-12 form-group">
                 <button class="btn btn-dark" type="submit">Save Address</button>
               </div>

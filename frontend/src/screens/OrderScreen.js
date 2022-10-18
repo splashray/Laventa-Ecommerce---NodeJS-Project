@@ -1,4 +1,5 @@
-import { getOrder, getPaypalClientId, getPaystackClientId, payOrder } from '../api';
+import { canPay, deliverOrder, getOrder, getPaypalClientId, getPaystackClientId, payOrder } from '../api';
+import { getUserInfo } from '../localStorage';
 import {parseRequestUrl,showLoading, hideLoading,showMessage,rerender,showGoodMessage,} from '../utils';
 
 // paypal add payment button
@@ -69,14 +70,11 @@ const handlePayment = (clientId, totalPrice) => {
   });
 };
 
-// paystack payment 
-const addPaystackSdk = async (totalPrice, userInfo) => {
 
-};
 const OrderScreen ={
-    after_render: async () => {
-      },
+    
     render: async()=>{
+      const { isAdmin } = getUserInfo();
       const request = parseRequestUrl();
       const {
         _id,
@@ -97,8 +95,7 @@ const OrderScreen ={
       }
       if(!isPaid){
         if(payment.paymentMethod === 'Paypal'){ addPaypalSdk(totalPrice);}
-        else if(payment.paymentMethod === 'Card Payment'){ addPaystackSdk(totalPrice, userInfo,);}
-        else{ addPaystackSdk(totalPrice);}
+      
       }
         return `
         <div class="container">
@@ -149,7 +146,7 @@ const OrderScreen ={
 
             ${
               isPaid
-              ?`<li class=" d-flex align-items-center justify-content-between"><strong class="small fw-bold">Payment Status</strong>
+              ?`<li class="successed d-flex align-items-center justify-content-between"><strong class="small fw-bold">Payment Status</strong>
               <span class="text-muted small"><p class="successed">Paid at ${paidAt} </p
               ></span>
               </li>`
@@ -201,15 +198,19 @@ const OrderScreen ={
               
                 ${payment.paymentMethod === "Paypal"?
                   `<div class="fw" id="paypal-button"></div>`
-                  : payment.paymentMethod === "Cash on Delivery"? 
-                  `<button id="cash" class="btn btn-lg btn-dark" type="submit" onClick="alert('Order will be processed soon.')">Confirm Now</button>`
-                  : payment.paymentMethod === "Bank Transfer"? 
-                  `<button id="bank" class="btn btn-lg btn-dark" type="submit" onClick="alert('Transfer to Account Number: 8464447373 || Account Name: Laventa boutique || Order will be processed after Confrimation.')">Transfer Now</button>`
                   : payment.paymentMethod === "Card Payment"? 
                   `<button id="card" class="btn btn-lg btn-dark" type="submit" onClick="alert('Available soon!  Use other payment option')">Pay Now</button>`
                   :`<button id="pay" class="btn btn-lg btn-dark" type="submit">Pay</button>` 
                   }
-                
+                  
+               
+
+                  ${
+                    isPaid && !isDelivered && isAdmin
+                      ? `<button id="deliver-order-button" class="btn btn-lg btn-dark fw">Deliver Order</button>`
+                      : ''
+                  }
+
                 </div>
         
            </div>
@@ -227,7 +228,22 @@ const OrderScreen ={
 
 
 `;
-    }
+    },
+    after_render: async () => {
+      const request = parseRequestUrl();
+      if (document.getElementById('deliver-order-button')) {
+        document.addEventListener('click', async () => {
+          showLoading();
+          await deliverOrder(request.id);
+          hideLoading();
+          showGoodMessage('Order Delivered')
+          // rerender(OrderScreen);
+          document.location.hash='/orders-lists'
+        });
+      }
+
+  
+      },
 }
 
 export default  OrderScreen

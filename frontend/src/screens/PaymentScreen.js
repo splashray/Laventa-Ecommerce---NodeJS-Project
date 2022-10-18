@@ -38,19 +38,7 @@ const PaymentScreen ={
                 </div>
             </div>
         
-            <div class="col-lg-6">
-                <div class="form-check">
-                    <input class="form-check-input" name="payment-method" id="bank" value="Bank Transfer"  type="checkbox">
-                    <h5 class="" >Bank Transfer</h5>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="form-check">
-                    <input class="form-check-input" name="payment-method" id="cash" value="Cash on Delivery"  type="checkbox">
-                    <h5 class="" >Cash on Delivery</h5>
-                </div>
-             </div>
+         
 
           <div class="col-lg-12 form-group">
             <button class="btn btn-dark" type="submit">Continue</button>  
